@@ -1,20 +1,26 @@
-import { Component, ElementRef, ViewChild, inject  } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LoginModel } from '../../models/login.model';
 import { FormValidateDirective } from 'form-validate-angular';
+import { HttpService } from '../../services/http.service';
+import { LoginResponseModel } from '../../models/login-response.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone:true,
+  standalone: true,
   imports: [FormsModule, FormValidateDirective],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  login : LoginModel = new LoginModel()
-
+  login: LoginModel = new LoginModel()
 
   @ViewChild("password") password: ElementRef<HTMLInputElement> | undefined;
+
+  constructor(private http: HttpService, private router: Router) {
+
+  }
 
   showOrHidePassword() {
     if (this.password === undefined) return;
@@ -26,9 +32,12 @@ export class LoginComponent {
     }
   }
 
-  signIn(form: NgForm){
+  signIn(form: NgForm) {
     if (form.valid) {
-      
+      this.http.post<LoginResponseModel>("Auths", this.login, (res) => {
+        localStorage.setItem("token", res.data!.token)
+        this.router.navigateByUrl("/")
+      })
     }
   }
 }
