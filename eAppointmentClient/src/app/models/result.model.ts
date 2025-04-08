@@ -1,6 +1,6 @@
 export class ResultModel<T>{
     isSucceded?: boolean
-    data?: T
+    data?: any
     message?: string
     errors?: any[]
     httpStatusCode?: number
