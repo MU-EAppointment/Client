@@ -1,6 +1,6 @@
 export class DoctorModel{
     id: string = "";
-    firsNname: string = "";
+    firstName: string = "";
     lastName: string = "";
     fullName: string = "";
     department: number = 0;
