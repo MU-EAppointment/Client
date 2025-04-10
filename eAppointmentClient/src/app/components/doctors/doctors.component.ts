@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { departments } from '../../constants';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
+import { SwalService } from '../../services/swal.service';
 
 @Component({
   selector: 'app-doctors',
@@ -21,7 +22,8 @@ export class DoctorsComponent implements OnInit {
 
   createModel: DoctorModel = new DoctorModel()
   constructor(
-    private http: HttpService) { }
+    private http: HttpService,
+    private swal: SwalService) { }
   ngOnInit(): void {
     this.getAll();
   }
@@ -44,7 +46,8 @@ export class DoctorsComponent implements OnInit {
   add(form: NgForm) {
     if (form.valid) {
       this.http.post("Doctors", this.createModel, (res) => {
-        console.log(res)
+
+        this.swal.callToast(res.data.fullName,"success")
         this.getAll()
         this.addModelCloseBtn?.nativeElement.click()
         this.createModel = new DoctorModel();
