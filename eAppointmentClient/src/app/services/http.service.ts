@@ -2,13 +2,16 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { ResultModel } from '../models/result.model';
 import { api } from '../constants';
+import { ErrorService } from './error.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private error: ErrorService
+  ) { }
 
   post<T>(apiUrl: string, body: any, callback: (res: ResultModel<T>) => void, errCallBack?: (err: HttpErrorResponse) => void) {
     this.http.post<ResultModel<T>>(`${api}/${apiUrl}`, body)
@@ -27,7 +30,7 @@ export class HttpService {
   }
   getWithBody<T>(apiUrl: string, body: number | null, callback: (res: ResultModel<T>) => void, errCallBack?: (err: HttpErrorResponse) => void) {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-  
+
     this.http.request<ResultModel<T>>('GET', `${api}/${apiUrl}`, {
       headers: headers
     }).subscribe({
@@ -37,6 +40,8 @@ export class HttpService {
         }
       }),
       error: ((err: HttpErrorResponse) => {
+        this.error.errorHandler(err);
+
         if (errCallBack !== undefined) {
           errCallBack(err);
         }
