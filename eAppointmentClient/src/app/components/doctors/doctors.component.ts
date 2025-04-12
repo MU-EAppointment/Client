@@ -31,6 +31,7 @@ export class DoctorsComponent implements OnInit {
 
   getAll() {
     this.http.getWithBody<DoctorModel[]>("Doctors", 3, (res) => {
+      console.log(res.data)
       this.doctors = res.data
     });
   }
@@ -47,11 +48,20 @@ export class DoctorsComponent implements OnInit {
     if (form.valid) {
       this.http.post("Doctors", this.createModel, (res) => {
 
-        this.swal.callToast(res.data.fullName,"success")
+        this.swal.callToast(res.data.fullName, "success")
         this.getAll()
         this.addModelCloseBtn?.nativeElement.click()
         this.createModel = new DoctorModel();
       })
     }
+  }
+
+  delete(id: string, fullName: string) {
+    this.swal.callSwal("Delete Doctor", `You want to delete ${fullName}`, "Delete",() => {
+      this.http.delete<string>(`Doctors/${id}`, (res) => {
+        this.swal.callToast(res.data, "info");
+        this.getAll();
+      });
+    });
   }
 }

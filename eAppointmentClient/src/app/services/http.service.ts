@@ -48,4 +48,19 @@ export class HttpService {
       })
     });
   }
+  delete<T>(apiUrl: string, callback: (res: ResultModel<T>) => void, errCallBack?: (err: HttpErrorResponse) => void) {
+    this.http.delete<ResultModel<T>>(`${api}/${apiUrl}`)
+      .subscribe({
+        next: (res => {
+          if (res.data !== undefined || res.data !== null) {
+            callback(res);
+          }
+        }),
+        error: ((err: HttpErrorResponse) => {
+          if (errCallBack !== undefined) {
+            errCallBack(err);
+          }
+        })
+      });
+  }
 }
