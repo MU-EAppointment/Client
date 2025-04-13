@@ -63,4 +63,20 @@ export class HttpService {
         })
       });
   }
+
+  put<T>(apiUrl: string, body: any, callback: (res: ResultModel<T>) => void, errCallBack?: (err: HttpErrorResponse) => void) {
+    this.http.put<ResultModel<T>>(`${api}/${apiUrl}`, body)
+      .subscribe({
+        next: (res => {
+          if (res.data !== undefined || res.data !== null) {
+            callback(res);
+          }
+        }),
+        error: ((err: HttpErrorResponse) => {
+          if (errCallBack !== undefined) {
+            errCallBack(err);
+          }
+        })
+      });
+  }
 }

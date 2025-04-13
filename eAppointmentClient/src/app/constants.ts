@@ -1,5 +1,4 @@
-import { DepartmentsModel } from "./models/departments.model"
-
+import { DepartmentsModel } from "./models/doctor.model"
 export const api: string = "https://localhost:7152/api"
 
 export const departments: DepartmentsModel[] = [
