@@ -7,10 +7,11 @@ import { departments } from '../../constants';
 import { FormsModule, NgForm } from '@angular/forms';
 import { FormValidateDirective } from 'form-validate-angular';
 import { SwalService } from '../../services/swal.service';
+import { DoctorPipe } from '../../pipe/doctor.pipe';
 
 @Component({
   selector: 'app-doctors',
-  imports: [CommonModule, RouterLink, FormsModule, FormValidateDirective],
+  imports: [CommonModule, RouterLink, FormsModule, FormValidateDirective, DoctorPipe],
   templateUrl: './doctors.component.html',
   styleUrl: './doctors.component.css'
 })
@@ -23,6 +24,9 @@ export class DoctorsComponent implements OnInit {
 
   createModel: DoctorModel = new DoctorModel()
   updateModel: DoctorModel = new DoctorModel()
+
+  search: string = "";
+
   constructor(
     private http: HttpService,
     private swal: SwalService) { }
@@ -59,7 +63,7 @@ export class DoctorsComponent implements OnInit {
   }
 
   delete(id: string, fullName: string) {
-    this.swal.callSwal("Delete Doctor", `You want to delete ${fullName}`, "Delete",() => {
+    this.swal.callSwal("Delete Doctor", `You want to delete ${fullName}`, "Delete", () => {
       this.http.delete<string>(`Doctors/${id}`, (res) => {
         this.swal.callToast(res.data, "info");
         this.getAll();
@@ -69,12 +73,12 @@ export class DoctorsComponent implements OnInit {
 
   get(data: DoctorModel) {
     console.log(data);
-    
-    this.updateModel = {...data}
+
+    this.updateModel = { ...data }
     this.updateModel.department = data.department;
   }
 
-  update(form: NgForm){
+  update(form: NgForm) {
     if (form.valid) {
       this.http.put("Doctors", this.updateModel, (res) => {
 
